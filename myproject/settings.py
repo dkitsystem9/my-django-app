@@ -4,33 +4,16 @@ from dotenv import load_dotenv
 import dj_database_url
 import pymysql
 
-# Install MySQL compatibility
 pymysql.install_as_MySQLdb()
-
-# Load environment variables
 load_dotenv()
 
 # Base directory
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# SECURITY WARNING
+# SECURITY
 SECRET_KEY = os.getenv("SECRET_KEY", "your-default-secret-key")
 DEBUG = os.getenv("DEBUG", "False") == "True"
-ALLOWED_HOSTS = [
-    'my-django-app-production-f5dc.up.railway.app',  # Your Railway production URL
-    'localhost',  # Optional: for local development
-    '127.0.0.1'   # Optional: for local development
-]
-
-# TRUSTED DOMAIN for CSRF
-CSRF_TRUSTED_ORIGINS = [
-    'https://my-django-app-production-f5dc.up.railway.app',
-]
-
-# Secure cookies and HTTPS settings
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
-SECURE_SSL_REDIRECT = True
+ALLOWED_HOSTS = ['*']  # Replace with specific domain in production
 
 # Application definition
 INSTALLED_APPS = [
@@ -40,12 +23,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'accounts',  # your custom app
+    'accounts',  # Your custom app
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',  # Enables static files in production
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # Serve static files
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -59,7 +42,7 @@ ROOT_URLCONF = 'myproject.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],
+        'DIRS': [BASE_DIR / 'templates'],  # Custom templates folder
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -95,11 +78,22 @@ USE_TZ = True
 
 # Static files
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [BASE_DIR / "static"]
-STATIC_ROOT = BASE_DIR / "staticfiles"
+STATICFILES_DIRS = [BASE_DIR / 'static']
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-# Whitenoise configuration for serving static files
+# Whitenoise configuration for static files
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+# Secure settings for Railway HTTPS
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SECURE_SSL_REDIRECT = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+
+# CSRF trusted origin (use your Railway domain)
+CSRF_TRUSTED_ORIGINS = [
+    'https://my-django-app-production-f5dc.up.railway.app',
+]
 
 # Default auto field
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
