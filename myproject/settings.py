@@ -3,18 +3,34 @@ import os
 from dotenv import load_dotenv
 import dj_database_url
 import pymysql
+
+# Install MySQL compatibility
 pymysql.install_as_MySQLdb()
 
-# Load .env variables
+# Load environment variables
 load_dotenv()
 
 # Base directory
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# SECURITY
+# SECURITY WARNING
 SECRET_KEY = os.getenv("SECRET_KEY", "your-default-secret-key")
 DEBUG = os.getenv("DEBUG", "False") == "True"
-ALLOWED_HOSTS = ['*']  # You can replace with actual domain for production
+ALLOWED_HOSTS = [
+    'my-django-app-production-f5dc.up.railway.app',  # Your Railway production URL
+    'localhost',  # Optional: for local development
+    '127.0.0.1'   # Optional: for local development
+]
+
+# TRUSTED DOMAIN for CSRF
+CSRF_TRUSTED_ORIGINS = [
+    'https://my-django-app-production-f5dc.up.railway.app',
+]
+
+# Secure cookies and HTTPS settings
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+SECURE_SSL_REDIRECT = True
 
 # Application definition
 INSTALLED_APPS = [
@@ -29,7 +45,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',  # For static files in production
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # Enables static files in production
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -43,7 +59,7 @@ ROOT_URLCONF = 'myproject.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],  # Add custom templates here if needed
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -58,7 +74,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'myproject.wsgi.application'
 
-# Database: using dj-database-url
+# Database
 DATABASES = {
     'default': dj_database_url.parse(os.getenv("DATABASE_URL"))
 }
@@ -82,7 +98,7 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / "static"]
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
-# Whitenoise configuration
+# Whitenoise configuration for serving static files
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Default auto field
