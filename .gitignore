@@ -1,0 +1,25 @@
+# Ignore Python bytecode
+__pycache__/
+*.py[cod]
+*.sqlite3
+
+# Ignore environment
+.env
+*.env
+
+# Ignore virtualenv folders
+venv/
+env/
+.venv/
+
+# Ignore OS files
+.DS_Store
+Thumbs.db
+
+# Ignore VSCode/IDE files
+.vscode/
+.idea/
+
+# Ignore migrations (optional)
+**/migrations/
+!*/migrations/__init__.py
