@@ -2,6 +2,8 @@ from pathlib import Path
 import os
 from dotenv import load_dotenv
 import dj_database_url
+import pymysql
+pymysql.install_as_MySQLdb()
 
 # Load .env variables
 load_dotenv()
